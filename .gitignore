@@ -9,6 +9,7 @@
 
 ## instrument files
 instrumentfiles/*
+!instrumentfiles/norm_1ph_per_keVcm2s_wabs-0.018.txt
 imgs/*
 
 ## python (github default)

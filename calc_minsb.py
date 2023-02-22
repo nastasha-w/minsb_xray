@@ -91,7 +91,7 @@ ddir_xifu = dir_insfiles + 'athena_x-ifu/cost-constrained_2020-09-28/'
 filename_resp_xifu = 'responses/XIFU_CC_BASELINECONF_2018_10_10'
 filename_bkg_xifu  = 'backgrounds/TotalBKG1arcmin2.pha'
 
-ddir_galabs_xifu = mdir
+ddir_galabs_xifu = dir_insfiles
 filename_galabs_xifu = 'norm_1ph_per_keVcm2s_wabs-0.018.txt'
 
 # .arf files from SOXS; may need updating
