@@ -1,6 +1,7 @@
-+--------------+
-| Introduction |
-+--------------+
+
+Introduction
+============
+
 
 I used this code (before a few slight modifications to make it a 
 stand-alone set of scripts) in Wijers & Schaye (2022; ADS link: 
@@ -14,9 +15,9 @@ background to calculate the minimum emission line surface brightness
 a source needs to reach a given signal-to-noise ratio in a given 
 exposure time and spatial binning.
 
-+-----+
-| Use |
-+-----+
+
+Use 
+===
 
 'Installation' and warnings
 ---------------------------
@@ -91,9 +92,8 @@ brightnesses used in Wijers & Schaye (2022). This can be modified to
 calculate a different set of minima.
 
 
-+-------+
-| Notes |
-+-------+
+Notes
+=====
 
 papers to cite for this code:
 -----------------------------
