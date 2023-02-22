@@ -358,7 +358,7 @@ class InstrumentModel:
             self.responses = Responses(arf_fn=self.arf_fn, rmf_fn=self.rmf_fn)
             
             # XRISM/Suzaku responses: .arf 
-            # Aurora
+            # Aurora Simionescu:
             # The arf files for extended sources are normalized to convert 
             # “counts per second per entire Resolve field of view” 
             # to phot/s/cm2 per 25*pi arcmin2
