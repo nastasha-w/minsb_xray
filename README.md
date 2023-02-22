@@ -1,5 +1,6 @@
-
-##Introduction
++--------------+
+| Introduction |
++--------------+
 
 I used this code (before a few slight modifications to make it a 
 stand-alone set of scripts) in Wijers & Schaye (2022; ADS link: 
@@ -13,9 +14,12 @@ background to calculate the minimum emission line surface brightness
 a source needs to reach a given signal-to-noise ratio in a given 
 exposure time and spatial binning.
 
-##Use
++-----+
+| Use |
++-----+
 
-###'Installation' and warnings
+'Installation' and warnings
+---------------------------
 
 I have not put this together as a full installable package; this is 
 just a collection of scripts best run from the directory they are in.
@@ -52,7 +56,9 @@ e.g., saved in a single file or split into multiple components. Also
 note that data on e.g., the opening angle over which the backgrounds
 are given also differs between files. This needs to be added by hand.
 
-###Main functions
+
+Main functions
+--------------
 
 The `InstrumentModel` class is the workhorse of the code, used to 
 calculate actual minimum surface brightness levels using its 
@@ -85,9 +91,12 @@ brightnesses used in Wijers & Schaye (2022). This can be modified to
 calculate a different set of minima.
 
 
-##Notes
++-------+
+| Notes |
++-------+
 
-###bibtex entries to cite for this code:
+papers to cite for this code:
+-----------------------------
 
 Please remember to also cite the sources for the backgrounds and 
 response files you use. Some sources are only needed if you use the
