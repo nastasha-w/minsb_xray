@@ -6,14 +6,16 @@ Introduction
 I used this code (before a few slight modifications to make it a 
 stand-alone set of scripts) in Wijers & Schaye (2022; ADS link: 
 https://ui.adsabs.harvard.edu/abs/2022MNRAS.514.5214W/abstract).
-Please cite this paper if you use this code. (bibtex entry below)
+Please cite this paper if you use this code (bibtex entry below).
 Please remember to also cite the sources for the backgrounds and 
 response files you use.
 
 It uses the instrument responses and instrumental + astrophysical
 background to calculate the minimum emission line surface brightness 
 a source needs to reach a given signal-to-noise ratio in a given 
-exposure time and spatial binning.
+exposure time and spatial binning. Any systematic uncertainties,
+difficulties arising from Galactic emission or absorption features 
+at the same energy, etc., are simply ignored in these calculations.
 
 
 Use 
@@ -28,10 +30,10 @@ However, as installing the required sherpa package can be tricky, I
 have included a conda environment file that can be used to set up the
 required python packages in a virtual environment.
 
-This code also required models for the instrument responses and 
+This code also requires models for the instrument responses and 
 instrumental and astrophysical backgrounds. I have not included those
 there because the files would easily become outdated without 
-maintenance, and the same configuration and response fiel might not
+maintenance, and the same configuration and response file might not
 be appropriate for every situation. (E.g., on-axis vs. off-axis,
 focussed vs. unfocussed, different options for in-development 
 instruments.)
