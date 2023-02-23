@@ -127,7 +127,7 @@ archivePrefix = {arXiv},
 }
 ```
 
-If you used the included `wabs` absorption model, plese cite:
+If you used the included `wabs` absorption model, please cite:
 for the wabs model (in xspec): Morrison & McCammon (1983; ADS link: 
 https://ui.adsabs.harvard.edu/abs/1983ApJ...270..119M/abstract)
 ```
