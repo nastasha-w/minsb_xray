@@ -419,32 +419,45 @@ class InstrumentModel:
             
     def getminSB_grid(self, E_rest, linewidth_kmps=100., z=0.0,
                       nsigma=5., area_texp=1e5, extr_range=2.5,
-                      incl_galabs=False):
+                      incl_galabs=False, retbkg=False):
         '''
         calculate the minimum surface brightness (photons / cm**2 / s / sr) of 
         a Gaussian emission line for detection
         
         Parameters
         ----------
-        E_rest:         rest-frame energy (keV); float or 1D-array of floats
-        linewidth_kmps: width of the gaussian line (b parameter); km/s
-        z:              redshift of the lines (float)
-        nsigma:         required detection significance (sigma; float)
-        area_texp:      solid angle to extract the emission from (arcmin**2) 
-                        times the exposure time (s); float
-        extr_range:     range around the input energy to extract the counts
-                        float: range in eV (will be rounded to whole channels;
-                               full width)
-                        int:   number of channels (full width)
-        incl_galabs:    include the effect of absorption by our Galaxy (bool)
-                        (minimum surface brightnesses at the instrument are 
-                        adjusted for galactic absorption to estimate the
-                        required intrinsic (but redshifted) flux)
-            
+        E_rest: float or 1D-array of floats      
+            rest-frame energy (keV); 
+        linewidth_kmps: float
+            width of the gaussian line (b parameter)
+        z: float             
+            redshift of the lines
+        nsigma: float       
+            required detection significance (sigma)
+        area_texp: float     
+            solid angle to extract the emission from (arcmin**2) 
+            times the exposure time (s)
+        extr_range: float or int    
+            range around the input energy to extract the counts
+                float: range in eV (will be rounded to whole channels;
+                       full width)
+                int:   number of channels (full width)
+        incl_galabs: bool   
+            include the effect of absorption by our Galaxy (bool)
+            (minimum surface brightnesses at the instrument are 
+            adjusted for galactic absorption to estimate the
+            required intrinsic (but redshifted) flux)
+        retbkg: bool
+            return the extracted background level alongside the minimum
+            surface brightness
         Returns
         -------
-        _minSB:         array of minimum SB values (photons / cm**2 / s / sr)
-        E_pos:          redshifted energies of the lines
+        _minSB: array of floats
+            minimum SB values (photons / cm**2 / s / sr)
+        bkg: array of floats, only if retbkg is True
+            (equivalent) surface brightness of backgrounds 
+            (astro/local/instrumental; photons / cm2 / s / sr)
+            extracted over the same spectral region as the lines
         '''
                 
         # setup input spectra
@@ -524,7 +537,10 @@ class InstrumentModel:
         #    plt.axvline(E_pos[li], label='line energy (redshift)')
         #    plt.legend()
         #    plt.show()
-        return _minsb
+        if retbkg:
+            return _minsb, bkg_extr
+        else:
+            return _minsb
         
     def _getgalabs_xifu(self):
         '''
@@ -569,7 +585,7 @@ def getdata_xifu():
     --------
     Responses: Responses object using the X-IFU arf amd rmf 
     get_bkg:   function that takes the detector channel and returns 
-               the background (counts / cm**2/ s / sr)
+               the background (counts / s / sr)
                from scipy.interpolate.interp1d
     '''
     
@@ -1217,8 +1233,165 @@ def savetable_sbmin(lineset='SB'):
                                                       instrument=imname,
                                                       minsb=_minSB)
                                 fo.write(out)
-        
+
+def savetable_sbmin_bkg(lineset='SB'):
     
+    nsigma = 5.
+    lw = 100.
+    zvals = np.arange(0.095, 0.1055, 0.001)
+    if lineset == 'SB': # lines from Serena Bertone's paper
+        lines = ['c5r', 'n6f', 'n6r', 'ne9r', 'ne10', 'mg11r', 'mg12',
+                 'si13r', 'fe18', 'fe17-other1', 'fe19', 'o7r', 
+                 'o7i', 'o7f', 'o8', 'fe17', 'c6', 'n7']
+        filename = 'minSBtable_bkg.dat'
         
+        sorter_E = line_eng_ion.get
+        lines.sort(key=sorter_E)
+        Erest = [line_eng_ion[line] / c.ev_to_erg * 1e-3 for line in lines]
+        Erest = np.array(Erest)
+    elif lineset == 'PS20_Fe-L-shell': 
+        # other lines are very close to their SB counterparts
+        lines = ['Fe17      17.0510A',
+                 'Fe17      15.2620A', 'Fe17      16.7760A',
+                 'Fe17      17.0960A', 'Fe18      16.0720A']
+        filename = 'minSBtable_PS20_Fe-L-shell_bkg.dat'
+        
+        def get_E_kev(line):
+            e_A = float(line.split(' ')[-1][:-1])
+            e_eV = c.planck * c.c / (e_A * 1e-8) / c.ev_to_erg * 1e-3
+            return e_eV
+        Erest = [get_E_kev(line) for line in lines]
+        Erest = np.array(Erest)
+    else:
+        raise ValueError('{} is not a lineset option'.format(lineset))
+        
+    instruments = ['athena-xifu', 'lynx-lxm-main', 'lynx-lxm-uhr',
+                   'xrism-resolve']
+    extr_ranges = {'athena-xifu': [2.5],
+                   'lynx-lxm-main': [4.0],
+                   'lynx-lxm-uhr': [0.6],
+                   'xrism-resolve': [10.],
+                   }
+    omegats = [1e5, 3e5, 1e6, 3e6, 1e7]
+    
+    printfmt = ('{line}\t{Erest}\t{linewidth}\t{redshift}\t{omegat}\t'
+                '{extr_range}\t{nsigma}\t{galabs}\t{instrument}'
+                '\t{minsb}\t{background}\n')
+    head = printfmt.format(line='line name', Erest='E rest [keV]',
+                           linewidth='linewidth [km/s]', redshift='redshift',
+                           omegat='sky area * exposure time [arcmin**2 s]',
+                           extr_range='full measured spectral range [eV]',
+                           nsigma='detection significance [sigma]',
+                           galabs='galaxy absorption included in limit',
+                           minsb='minimum detectable SB [phot/s/cm**2/sr]',
+                           instrument='instrument',
+                           background=('total background rate in spec. range '
+                                       '[counts / s / sr]')
+                           )
+    
+    with open(mdir + filename, 'w') as fo:
+        fo.write(head)
+        for imname in instruments:
+            im = InstrumentModel(imname)
+            for extr_range in extr_ranges[imname]:
+                for omegat in omegats:
+                    for z in zvals:
+                        for galabs in [True, False]:
+                            mask = Erest >= im.responses.E_lo_arf[0] + 20e-3
+                            mask &= Erest <= im.responses.E_hi_arf[-1] - 20e-3
+                            minSBs, bkgs = im.getminSB_grid(Erest[mask], 
+                                                      linewidth_kmps=lw,
+                                                      z=z, nsigma=nsigma,
+                                                      extr_range=extr_range,
+                                                      area_texp=omegat,
+                                                      incl_galabs=galabs,
+                                                      retbkg=True)
+                            dummy = np.ones(len(mask), minSBs.dtype) * np.NaN
+                            dummy[mask] = minSBs
+                            dummy[np.logical_not(mask)] = np.inf
+                            minSBs = dummy
+                            dummy = np.ones(len(mask), bkgs.dtype) * np.NaN
+                            dummy[mask] = bkgs
+                            bkgs = dummy
+
+                            for _Erest, _minSB, _bkg, line \
+                                    in zip(Erest, minSBs, bkgs, lines):
+                                out = printfmt.format(line=line, Erest=_Erest,
+                                                      linewidth=lw,redshift=z,
+                                                      omegat=omegat,
+                                                      extr_range=extr_range,
+                                                      nsigma=nsigma, 
+                                                      galabs=galabs,
+                                                      instrument=imname,
+                                                      minsb=_minSB,
+                                                      background=_bkg)
+                                fo.write(out)
+        
+def savetable_sbmin_o7r():
+    
+    nsigma = 5.
+    lw = 100.
+    zvals = np.array([0.0, 0.01, 0.02, 0.03, 0.04, 
+                      0.05, 0.06, 0.07, 0.08, 0.09, 0.1])
+    lines = ['o7r', 'o7i', 'o7f', 'o8']
+    filename = 'minSBtable_olines_loz.dat'
+    sorter_E = line_eng_ion.get
+    lines.sort(key=sorter_E)
+    Erest = [line_eng_ion[line] / c.ev_to_erg * 1e-3 for line in lines]
+    Erest = np.array(Erest)
+        
+    instruments = ['athena-xifu']
+    extr_ranges = {'athena-xifu': [2.5],
+                   'lynx-lxm-main': [4.0],
+                   'lynx-lxm-uhr': [0.6],
+                   'xrism-resolve': [10.],
+                   }
+    omegats = np.array([1e5, 2e5, 3e5, 5e5, 1e6, 2e6, 3e6, 5e6, 1e7]) \
+              * (np.pi * (0.5 * 5.)**2) * arcmin2
+    
+    printfmt = ('{line}\t{Erest}\t{linewidth}\t{redshift}\t{omegat}\t'
+                '{extr_range}\t{nsigma}\t{galabs}\t{instrument}\t{minsb}\n')
+    head = printfmt.format(line='line name', Erest='E rest [keV]',
+                           linewidth='linewidth [km/s]', redshift='redshift',
+                           omegat='sky area * exposure time [arcmin**2 s]',
+                           extr_range='full measured spectral range [eV]',
+                           nsigma='detection significance [sigma]',
+                           galabs='galaxy absorption included in limit',
+                           minsb='minimum detectable SB [phot/s/cm**2/sr]',
+                           instrument='instrument')
+    
+    with open(mdir + filename, 'w') as fo:
+        fo.write(head)
+        for imname in instruments:
+            im = InstrumentModel(imname)
+            for extr_range in extr_ranges[imname]:
+                for omegat in omegats:
+                    for z in zvals:
+                        for galabs in [True, False]:
+                            mask = Erest >= im.responses.E_lo_arf[0] + 20e-3
+                            mask &= Erest <= im.responses.E_hi_arf[-1] - 20e-3
+                            
+                            minSBs = im.getminSB_grid(Erest[mask], 
+                                                      linewidth_kmps=lw,
+                                                      z=z, nsigma=nsigma,
+                                                      extr_range=extr_range,
+                                                      area_texp=omegat,
+                                                      incl_galabs=galabs)
+                            dummy = np.ones(len(mask), minSBs.dtype) * np.NaN
+                            dummy[mask] = minSBs
+                            dummy[np.logical_not(mask)] = np.inf
+                            minSBs = dummy
+                            
+                            for _Erest, _minSB, line \
+                                    in zip(Erest, minSBs, lines):
+                                out = printfmt.format(line=line, Erest=_Erest,
+                                                      linewidth=lw,redshift=z,
+                                                      omegat=omegat,
+                                                      extr_range=extr_range,
+                                                      nsigma=nsigma, 
+                                                      galabs=galabs,
+                                                      instrument=imname,
+                                                      minsb=_minSB)
+                                fo.write(out)
         
     
