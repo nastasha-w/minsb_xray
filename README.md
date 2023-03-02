@@ -2,7 +2,6 @@
 Introduction
 ============
 
-
 I used this code (before a few slight modifications to make it a 
 stand-alone set of scripts) in Wijers & Schaye (2022; ADS link: 
 https://ui.adsabs.harvard.edu/abs/2022MNRAS.514.5214W/abstract).
@@ -21,14 +20,24 @@ at the same energy, etc., are simply ignored in these calculations.
 Use 
 ===
 
+Dependencies:
+-------------
+This code requires the following python packages:
+- numpy
+- scipy
+- astropy
+- pandas
+- matplotlib
+- sherpa : see https://cxc.cfa.harvard.edu/sherpa/python/ for 
+  instructions. As of writing (2023-03-02), this package works for
+  python versions 3.8, 3.9, and 3.10. For conda installations, a 
+  specific channel needs to be used (see the website).
+
 'Installation' and warnings
 ---------------------------
 
 I have not put this together as a full installable package; this is 
 just a collection of scripts best run from the directory they are in.
-However, as installing the required sherpa package can be tricky, I 
-have included a conda environment file that can be used to set up the
-required python packages in a virtual environment.
 
 This code also requires models for the instrument responses and 
 instrumental and astrophysical backgrounds. I have not included those
@@ -58,7 +67,6 @@ different instruments come with different background file formats,
 e.g., saved in a single file or split into multiple components. Also 
 note that data on e.g., the opening angle over which the backgrounds
 are given also differs between files. This needs to be added by hand.
-
 
 Main functions
 --------------
