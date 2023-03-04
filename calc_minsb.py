@@ -1347,7 +1347,7 @@ def savetable_sbmin_o7r():
                    'xrism-resolve': [10.],
                    }
     omegats = np.array([1e5, 2e5, 3e5, 5e5, 1e6, 2e6, 3e6, 5e6, 1e7]) \
-              * (np.pi * (0.5 * 5.)**2) * arcmin2
+              * (np.pi * (0.5 * 5.)**2)
     
     printfmt = ('{line}\t{Erest}\t{linewidth}\t{redshift}\t{omegat}\t'
                 '{extr_range}\t{nsigma}\t{galabs}\t{instrument}\t{minsb}\n')
