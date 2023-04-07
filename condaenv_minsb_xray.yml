@@ -1,0 +1,13 @@
+name: minsb_xray
+channels:
+  - defaults
+  - sherpa
+dependencies:
+  - scipy
+  - astropy
+  - numpy
+  - pandas
+  - matplotlib
+  - python=3.10
+  - sherpa
+prefix: /Users/nastasha/opt/anaconda3/envs/minsb_xray
