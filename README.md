@@ -208,21 +208,21 @@ For the line selection in the `line_eng_ion` dictionary near the top of
 `calc_minsb.py`: Bertone et al. (2010; 
 ADS: https://ui.adsabs.harvard.edu/abs/2010MNRAS.407..544B/abstract)
 ```
-@ARTICLE{2022MNRAS.514.5214W,
-       author = {{Wijers}, Nastasha A. and {Schaye}, Joop},
-        title = "{The warm-hot circumgalactic medium around EAGLE-simulation galaxies and its detection prospects with X-ray-line emission}",
+@ARTICLE{2010MNRAS.407..544B,
+       author = {{Bertone}, Serena and {Schaye}, Joop and {Dalla Vecchia}, Claudio and {Booth}, C.~M. and {Theuns}, Tom and {Wiersma}, Robert P.~C.},
+        title = "{Metal-line emission from the warm-hot intergalactic medium - I. Soft X-rays}",
       journal = {\mnras},
-     keywords = {galaxies: formation, galaxies: groups: general, galaxies: haloes, large-scale structure of Universe, X-rays: galaxies, Astrophysics - Astrophysics of Galaxies, Astrophysics - Cosmology and Nongalactic Astrophysics},
-         year = 2022,
-        month = aug,
-       volume = {514},
-       number = {4},
-        pages = {5214-5237},
-          doi = {10.1093/mnras/stac1580},
+     keywords = {radiation mechanisms: thermal, methods: numerical, galaxies: formation, intergalactic medium, cosmology: theory, diffuse radiation, Astrophysics - Cosmology and Nongalactic Astrophysics},
+         year = 2010,
+        month = sep,
+       volume = {407},
+       number = {1},
+        pages = {544-566},
+          doi = {10.1111/j.1365-2966.2010.16932.x},
 archivePrefix = {arXiv},
-       eprint = {2108.04847},
- primaryClass = {astro-ph.GA},
-       adsurl = {https://ui.adsabs.harvard.edu/abs/2022MNRAS.514.5214W},
+       eprint = {0910.5723},
+ primaryClass = {astro-ph.CO},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2010MNRAS.407..544B},
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 ```
