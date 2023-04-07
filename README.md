@@ -36,7 +36,7 @@ This code requires the following python packages:
 These can also be installed in a conda environment called 'minsb\_xray'
 with: 
 ```
-conda env create -f condaenv\_minsb\_xray.yml
+conda env create -f condaenv_minsb_xray.yml
 ```
 Note that this does require a somewhat up-to-date (ana)conda version: a
 system anaconda version 4 did not work here.
