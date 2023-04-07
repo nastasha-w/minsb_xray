@@ -33,6 +33,14 @@ This code requires the following python packages:
   python versions 3.8, 3.9, and 3.10. For conda installations, a 
   specific channel needs to be used (see the website).
 
+These can also be installed in a conda environment called 'minsb\_xray'
+with: 
+```
+conda env create -f condaenv\_minsb\_xray.yml
+```
+Note that this does require a somewhat up-to-date (ana)conda version: a
+system anaconda version 4 did not work here.
+
 'Installation' and warnings
 ---------------------------
 
