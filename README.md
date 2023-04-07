@@ -63,7 +63,7 @@ density) for your own applications.
 
 For the paths and instrument responses, you will need to modify the 
 code under `##paths` near the top of `calc_minsb.py`. 
-`mdir` is the directory where plotted images are stored
+`mdir` is the directory where plotted images are stored.
 `dir_insfiles` is the directory where response files and backgrounds
 are stored. You will also need to modify the paths for the response
 files and backgrounds for different instruments.
